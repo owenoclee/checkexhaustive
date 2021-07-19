@@ -49,11 +49,11 @@ or, integrated into Visual Studio Code with the following `settings.json`:
 ```json
 {
 	"go.vetOnSave": "workspace",
-	"go.languageServerExperimentalFeatures": {
-	    "diagnostics": false,
-	},
 	"go.vetFlags": [
 	    "-vettool=/path/to/checkexhaustive"
 	],
+	"go.languageServerExperimentalFeatures": {
+	    "diagnostics": false, // https://github.com/golang/vscode-go/issues/1109
+	},
 }
 ```
