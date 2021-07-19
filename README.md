@@ -43,3 +43,17 @@ or, as part of [go vet](https://pkg.go.dev/cmd/vet):
 ```
 go vet -vettool=$(which checkexhaustive) [packages]
 ```
+
+or, integrated into Visual Studio Code with the following `settings.json`:
+
+```json
+{
+	"go.vetOnSave": "workspace",
+	"go.languageServerExperimentalFeatures": {
+	    "diagnostics": false,
+	},
+	"go.vetFlags": [
+	    "-vettool=/path/to/checkexhaustive"
+	],
+}
+```
