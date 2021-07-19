@@ -59,22 +59,24 @@ func run(pass *analysis.Pass) (interface{}, error) {
 				}
 			}
 		case *ast.CompositeLit:
+			var ident *ast.Ident
 			var pkgIdent *ast.Ident
-			ident, ok := stmt.Type.(*ast.Ident)
-			if !ok {
-				// it might be an *ast.SelectorExpr (e.g. x.Foo)
-				selExpr, ok := stmt.Type.(*ast.SelectorExpr)
-				if !ok {
-					return
-				}
-				if pIdent, ok := selExpr.X.(*ast.Ident); ok {
+
+			switch v := stmt.Type.(type) {
+			case *ast.Ident:
+				ident = v
+			case *ast.SelectorExpr:
+				ident = v.Sel
+				if pIdent, ok := v.X.(*ast.Ident); ok {
 					pkgIdent = pIdent
 				}
-				ident = selExpr.Sel
+			default:
+				return
 			}
+
 			sPos := positionToSPos(pass.Fset.Position(ident.NamePos))
 			sPos.line--
-			if _, ok = cmts[sPos]; !ok {
+			if _, ok := cmts[sPos]; !ok {
 				return
 			}
 
