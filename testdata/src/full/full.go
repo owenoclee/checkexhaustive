@@ -1,5 +1,7 @@
 package full
 
+import "go/ast"
+
 type private struct {
 	a int
 	b int
@@ -85,6 +87,13 @@ func fail5() {
 }
 
 func fail6() {
+	// check:exhaustive
+	_ = ast.Comment{ // want "ast.Comment is missing fields: Slash"
+		Text: "hello, world",
+	}
+}
+
+func fail7() {
 	// check:exhaustive // want "unmatched check:exhaustive comment"
 	_ = map[string]string{
 		"a": "apple",
@@ -92,6 +101,6 @@ func fail6() {
 	}
 }
 
-func fail7() {
+func fail8() {
 	// check:exhaustive // want "unmatched check:exhaustive comment"
 }

@@ -59,9 +59,18 @@ func run(pass *analysis.Pass) (interface{}, error) {
 				}
 			}
 		case *ast.CompositeLit:
+			var pkgIdent *ast.Ident
 			ident, ok := stmt.Type.(*ast.Ident)
 			if !ok {
-				return
+				// it might be an *ast.SelectorExpr (e.g. x.Foo)
+				selExpr, ok := stmt.Type.(*ast.SelectorExpr)
+				if !ok {
+					return
+				}
+				if pIdent, ok := selExpr.X.(*ast.Ident); ok {
+					pkgIdent = pIdent
+				}
+				ident = selExpr.Sel
 			}
 			sPos := positionToSPos(pass.Fset.Position(ident.NamePos))
 			sPos.line--
@@ -98,7 +107,11 @@ func run(pass *analysis.Pass) (interface{}, error) {
 			sort.Strings(missingFields)
 
 			if len(missingFields) > 0 {
-				pass.Reportf(stmt.Pos(), "%s is missing fields: %s", ident.Name, strings.Join(missingFields, ", "))
+				sName := ident.Name
+				if pkgIdent != nil {
+					sName = pkgIdent.Name + "." + sName
+				}
+				pass.Reportf(stmt.Pos(), "%s is missing fields: %s", sName, strings.Join(missingFields, ", "))
 			}
 
 			cmts[sPos] = comment{
