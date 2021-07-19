@@ -1,7 +1,7 @@
 # checkexhaustive
 
 Checkexhaustive is a simple analyzer for Go that ensures any struct literal
-labelled with "//check:exhaustive" (on the line preceding it) has its fields
+labelled with `//check:exhaustive` (on the line preceding it) has its fields
 filled exhaustively.
 
 ```go
@@ -46,7 +46,7 @@ go vet -vettool=$(which checkexhaustive) [packages]
 
 or, integrated into Visual Studio Code with the following `settings.json`:
 
-```json
+```jsonc
 {
 	"go.vetOnSave": "workspace",
 	"go.vetFlags": [
