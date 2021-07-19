@@ -1,7 +1,7 @@
 # checkexhaustive
 
 Checkexhaustive is a simple analyzer for Go that ensures any struct literal
-labelled with "// check:exhaustive" (on the line preceding it) has its fields
+labelled with "//check:exhaustive" (on the line preceding it) has its fields
 filled exhaustively.
 
 ```go
@@ -14,7 +14,7 @@ type Contact struct {
 }
 
 func NewContact(name string) Contact {
-	// check:exhaustive
+	//check:exhaustive
 	return Contact{
 		Name: name,
 	}

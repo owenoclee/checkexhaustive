@@ -26,7 +26,7 @@ func positionToSPos(position token.Position) sPos {
 
 var Analyzer = &analysis.Analyzer{
 	Name:     "checkexhaustive",
-	Doc:      `Ensure exhaustive filling of struct literals labelled with "// check:exhaustive"`,
+	Doc:      `Ensure exhaustive filling of struct literals labelled with "//check:exhaustive"`,
 	Requires: []*analysis.Analyzer{inspect.Analyzer},
 	Run:      run,
 }
@@ -49,7 +49,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 		switch stmt := node.(type) {
 		case *ast.File:
 			for _, c := range stmt.Comments {
-				if len(c.List) == 1 && strings.HasPrefix(c.List[0].Text+" ", "// check:exhaustive ") {
+				if len(c.List) == 1 && strings.HasPrefix(c.List[0].Text+" ", "//check:exhaustive ") {
 					pos := c.Pos()
 					sPos := positionToSPos(pass.Fset.Position(pos))
 					cmts[sPos] = comment{
@@ -125,7 +125,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 
 	for _, cmt := range cmts {
 		if !cmt.handled {
-			pass.Reportf(cmt.pos, "unmatched check:exhaustive comment")
+			pass.Reportf(cmt.pos, "unmatched //check:exhaustive")
 		}
 	}
 
